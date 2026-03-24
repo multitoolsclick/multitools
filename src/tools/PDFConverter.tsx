@@ -3,11 +3,13 @@ import { Image, FileText, Loader2, Download, RefreshCw, ArrowRight, ArrowLeftRig
 import { PDFDocument } from 'pdf-lib';
 import { naturalSort } from '../lib/utils';
 import * as pdfjs from 'pdfjs-dist';
+// @ts-ignore
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs?url';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 // Set up pdfjs worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 export default function PDFConverter() {
   const [files, setFiles] = useState<File[]>([]);
@@ -75,7 +77,7 @@ export default function PDFConverter() {
 
           // Add to zip
           const base64Data = dataUrl.replace(/^data:image\/(png|jpg);base64,/, "");
-          zip.file(`page-${i}.png`, base64Data, { base64: true });
+          zip.file(`${i}.png`, base64Data, { base64: true });
         }
 
         setResultUrls(urls);
@@ -195,8 +197,11 @@ export default function PDFConverter() {
                       {resultUrls.map((url, idx) => (
                         <div key={idx} className="aspect-[3/4] bg-white/10 rounded-xl overflow-hidden border border-white/20 relative group">
                           <img src={url} alt={`Page ${idx + 1}`} className="w-full h-full object-cover opacity-80" referrerPolicy="no-referrer" />
+                          <div className="absolute top-2 left-2 bg-black/50 text-white text-[10px] font-bold px-2 py-1 rounded-md backdrop-blur-sm">
+                            Page {idx + 1}
+                          </div>
                           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
-                            <a href={url} download={`page-${idx + 1}.png`} className="p-2 bg-white text-green-600 rounded-full shadow-lg">
+                            <a href={url} download={`${idx + 1}.png`} className="p-2 bg-white text-green-600 rounded-full shadow-lg">
                               <Download className="w-4 h-4" />
                             </a>
                           </div>
