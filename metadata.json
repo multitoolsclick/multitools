@@ -1,0 +1,8 @@
+{
+  "name": "Remix: MultiTools",
+  "description": "A comprehensive, AI-powered web application for processing audio, video, documents, images, and data using Gemini AI.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
